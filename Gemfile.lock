@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    user_authentication (0.0.1)
+    user_authentication (0.0.2)
       bcrypt-ruby
-      rails (~> 3.2.8)
+      rails (~> 3.2.1)
 
 GEM
   remote: http://rubygems.org/
