@@ -1,3 +1,7 @@
+# 0.0.4
+  * Feature: A default login form partial (users/_form) which posts to /login.
+  * Feature: If a password is not set, a default random password is generated.
+
 # 0.0.3
   * Feature: Reduce rails dependency to 3.2.1. It was 3.2.8 earlier.
 
