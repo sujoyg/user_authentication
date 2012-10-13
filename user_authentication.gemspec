@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec_attribute_matchers", "~> 0.0.4"
   s.add_development_dependency "rspec_random", "~> 0.0.1"
   s.add_development_dependency "specstar-controllers", "~> 0.0.1"
+  s.add_development_dependency "webrat"
 end

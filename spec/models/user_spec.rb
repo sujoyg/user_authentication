@@ -9,6 +9,23 @@ describe User do
     it { should have_attribute(:updated_at) }
   end
 
+  describe 'callbacks' do
+    let(:password) { random_text(:length => 32) }
+    before { Random.stub!(:password) { password } }
+
+    it 'should set the password to something random if it is not set.' do
+      subject.password.should be_nil
+      subject.run_callbacks :validation
+      subject.password.should == password
+    end
+
+    it 'should retain the password if it was already set.' do
+      subject.password = password
+      subject.run_callbacks :validation
+      subject.password.should == password
+    end
+  end
+
   describe 'validations' do
     it { should validate_presence_of :email }
   end
