@@ -1,3 +1,6 @@
+# 0.0.5
+  * Feature: Allow user model to be overridden in the app.
+
 # 0.0.4
   * Feature: A default login form partial (users/_form) which posts to /login.
   * Feature: If a password is not set, a default random password is generated.
