@@ -18,3 +18,8 @@ If the model exists:
 * Ensure that the user model has an `email` and a `password_digest` field.
 * Add the following line at the top of app/models/user.rb:
   `require File.join UserAuthentication::Engine.config.root, 'app/models/user.rb'`
+
+### Configuring the application:
+
+* Add the following to `config/application.rb`
+  `config.railties_order = [UserAuthentication::Engine, :main_app, :all]
