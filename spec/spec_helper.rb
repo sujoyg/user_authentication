@@ -5,9 +5,9 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'factory_girl'
 require 'factories'
-require 'rspec_attribute_matchers'
 require 'rspec_random'
 require 'specstar/controllers'
+require 'specstar/models'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -23,8 +23,8 @@ RSpec.configure do |config|
   # config.mock_with :rr
 
   config.include FactoryGirl::Syntax::Methods
-  config.include RSpecAttributeMatchers, :type => :model
   config.include Specstar::Controllers::Matchers, :type => :controller
+  config.include Specstar::Models::Matchers, :type => :model
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"

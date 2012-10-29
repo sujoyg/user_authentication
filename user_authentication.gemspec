@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_girl_rails", "~> 4.0"
-  s.add_development_dependency "rspec_attribute_matchers", "~> 0.0.4"
   s.add_development_dependency "rspec_random", "~> 0.0.1"
-  s.add_development_dependency "specstar-controllers", "~> 0.0.1"
+  s.add_development_dependency "specstar-controllers", "~> 0.0.4"
+  s.add_development_dependency "specstar-models", "~> 0.0.6"
   s.add_development_dependency "webrat"
 end
