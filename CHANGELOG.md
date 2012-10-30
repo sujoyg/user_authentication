@@ -1,3 +1,6 @@
+# 0.0.6
+  * Bug: current_user was not accessible from view specs of an app using this engine.
+
 # 0.0.5
   * Feature: Allow user model to be overridden in the app.
 
