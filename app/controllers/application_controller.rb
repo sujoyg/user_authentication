@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_filter :set_current_user
 
-  private
+ # private
 
   def authorize
     # Not using skip before_filter, since main app could inadvertantly override that.
@@ -22,8 +22,6 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
     true
   end
-
-  helper_method :current_user
 end
 
 require File.join Rails.root, 'app/controllers/application_controller'
