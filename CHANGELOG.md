@@ -1,3 +1,6 @@
+# 0.0.7
+  * Bug: User model was not loading in the main app if the user authentication engine was loaded as part of another engine.
+
 # 0.0.6
   * Bug: current_user was not accessible from view specs of an app using this engine.
 
