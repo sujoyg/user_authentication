@@ -7,5 +7,9 @@ module UserAuthentication
         require File.expand_path('../../app/controllers/application_controller', __FILE__)
       end
     end
+
+    config.after_initialize do
+      require File.expand_path('../../app/models/user', __FILE__)
+    end
   end
 end
