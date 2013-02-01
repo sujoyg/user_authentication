@@ -1,3 +1,6 @@
+# 0.0.8
+  * Bug: current_user was not available in helpers and views.
+
 # 0.0.7
   * Bug: User model was not loading in the main app if the user authentication engine was loaded as part of another engine.
 

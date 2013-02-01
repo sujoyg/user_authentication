@@ -5,6 +5,7 @@ module UserAuthentication
     initializer 'user_authentication_engine.app_controller' do |app|
       ActiveSupport.on_load(:action_controller) do
         require File.expand_path('../../app/controllers/application_controller', __FILE__)
+        require File.expand_path('../../app/helpers/application_helper', __FILE__)
       end
     end
 
