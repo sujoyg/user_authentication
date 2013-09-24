@@ -3,7 +3,7 @@ User authentication engine requires Rails 3.2.1 or above.
 ### Installing the engine:
 
 * Add the following to the `Gemfile`<br>
-  `gem 'user_authentication', '~> 0.0.3'`
+  `gem 'user_authentication', '~> 0.0.8'`
 * Run `bundle install`
 
 ### Creating the User model:
@@ -15,7 +15,7 @@ If the model does not exist, run the following:
 
 If the model exists:
 
-* Ensure that the user model has an `email` and a `password_digest` field.
+* Ensure that the user model has an `email` (`VARCHAR(255)`) and a `password_digest` (`VARCHAR(255)`) field.
 * Add the following line at the top of app/models/user.rb:
   `require File.join UserAuthentication::Engine.config.root, 'app/models/user.rb'`
 
