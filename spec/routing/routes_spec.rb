@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'routes' do
-  it 'routes GET /login' do
+  it 'routes POST /login' do
     login_path.should == '/login'
     {post: '/login'}.should route_to controller: 'users', action: 'login'
   end
@@ -11,8 +11,8 @@ describe 'routes' do
     {get: '/logout'}.should route_to controller: 'users', action: 'logout'
   end
 
-  it 'routes POST /users' do
-    users_path.should == '/users'
-    {post: '/users'}.should route_to controller: 'users', action: 'create'
+  it 'routes POST /signup' do
+    signup_path.should == '/signup'
+    {post: '/signup'}.should route_to controller: 'users', action: 'signup'
   end
 end

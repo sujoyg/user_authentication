@@ -1,59 +1,6 @@
 require 'spec_helper'
 
 describe UsersController do
-  describe '#create' do
-    let(:email) { random_email }
-    let(:password) { random_text }
-
-    context 'success' do
-      it 'should create a user.' do
-        User.should_not exist email: email
-        expect { post :create, email: email, password: password }.to change { User.count }.by(1)
-        User.should exist email: email
-      end
-
-      it 'should set HTTP status to success.' do
-        post :create, email: email, password: password
-        response.should be_success
-      end
-
-      it 'should return JSON describing the user.' do
-        post :create, email: email, password: password
-        JSON.parse(response.body).tap do |object|
-          object.should be_a Hash
-          object.keys.should =~ ['email']
-          object['email'].should == email
-        end
-      end
-    end
-
-    context 'failure' do
-      let(:errors) { random_text }
-      before do
-        User.any_instance.stub(:save).and_return(false)
-        User.any_instance.stub(:errors).and_return(errors)
-      end
-
-      it 'should not create a user.' do
-        expect { post :create, email: email, password: password }.to_not change { User.count }
-      end
-
-      it 'should set HTTP status to bad request.' do
-        post :create, email: email, password: password
-        response.should be_bad_request
-      end
-
-      it 'should return JSON describing the error.' do
-        post :create, email: email, password: password
-        JSON.parse(response.body).tap do |object|
-          object.should be_a Hash
-          object.keys.should =~ ['errors']
-          object['errors'].should == errors
-        end
-      end
-    end
-  end
-
   describe '#login' do
     let(:email) { random_email }
     let(:password) { random_text }
@@ -150,6 +97,59 @@ describe UsersController do
       session[:return_to].should be_nil
       get :logout
       session[:return_to].should be_nil
+    end
+  end
+
+  describe '#signup' do
+    let(:email) { random_email }
+    let(:password) { random_text }
+
+    context 'success' do
+      it 'should create a user.' do
+        User.should_not exist email: email
+        expect { post :signup, email: email, password: password }.to change { User.count }.by(1)
+        User.should exist email: email
+      end
+
+      it 'should set HTTP status to success.' do
+        post :signup, email: email, password: password
+        response.should be_success
+      end
+
+      it 'should return JSON describing the user.' do
+        post :signup, email: email, password: password
+        JSON.parse(response.body).tap do |object|
+          object.should be_a Hash
+          object.keys.should =~ ['email']
+          object['email'].should == email
+        end
+      end
+    end
+
+    context 'failure' do
+      let(:errors) { random_text }
+      before do
+        User.any_instance.stub(:save).and_return(false)
+        User.any_instance.stub(:errors).and_return(errors)
+      end
+
+      it 'should not create a user.' do
+        expect { post :signup, email: email, password: password }.to_not change { User.count }
+      end
+
+      it 'should set HTTP status to bad request.' do
+        post :signup, email: email, password: password
+        response.should be_bad_request
+      end
+
+      it 'should return JSON describing the error.' do
+        post :signup, email: email, password: password
+        JSON.parse(response.body).tap do |object|
+          object.should be_a Hash
+          object.keys.should =~ ['errors']
+          object['errors'].should == errors
+        end
+      end
     end
   end
 end
