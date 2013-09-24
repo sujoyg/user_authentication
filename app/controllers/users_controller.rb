@@ -1,4 +1,16 @@
 class UsersController < ApplicationController
+  def create
+    user = User.new
+    user.email = params[:email]
+    user.password = params[:password]
+
+    if user.save
+      render json: {email: user.email}, status: :ok
+    else
+      render json: {errors: user.errors}, status: :bad_request
+    end
+  end
+
   def login
     user = User.find_by_email params[:email]
     if user && user.authenticate(params[:password])
@@ -16,4 +28,3 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 end
-
