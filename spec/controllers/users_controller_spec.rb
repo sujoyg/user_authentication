@@ -1,102 +1,151 @@
 require 'spec_helper'
 
 describe UsersController do
+  let(:referer) { random_url }
+  before { request.env['HTTP_REFERER'] = referer }
+
   describe '#login' do
     let(:email) { random_email }
     let(:password) { random_text }
 
-    shared_examples_for 'login failure' do
-      it 'redirects to root page.' do
-        post :login, email: email, password: password
-        response.should redirect_to root_path
+    context 'failure' do
+      shared_examples_for 'login failure' do
+        it 'redirects to referring page.' do
+          post :login, email: email, password: password
+          response.should redirect_to referer
+        end
+
+        it 'sets an error message.' do
+          post :login, email: email, password: password
+          flash.alert.should == 'Please check email and password.'
+        end
       end
 
-      it 'sets an error message.' do
-        post :login, email: email, password: password
-        flash.alert.should == 'Please check email and password.'
+      context 'when user does not exist' do
+        before { User.should_not exist email: email }
+
+        it_behaves_like 'login failure'
+      end
+
+      context 'when authentication failed' do
+        before { create(:user, email: email, password: random_text) }
+
+        it_behaves_like 'login failure'
       end
     end
 
-    context 'when user does not exist' do
-      before { User.should_not exist email: email }
+    context 'success' do
+      let!(:user) { create(:user, email: email, password: password) }
 
-      it_behaves_like 'login failure'
-    end
-
-    context 'when password is incorrect' do
-      before { create(:user, email: email, password: random_text) }
-
-      it_behaves_like 'login failure'
-    end
-
-    describe 'when password is correct' do
-      before { @user = create(:user, email: email, password: password) }
-
-      it 'sets the user in the session.' do
-        User.should exist email: email
-
+      it 'should set the user in the session.' do
         session[:user_id].should be_nil
         post :login, email: email, password: password
-        session[:user_id].should == @user.id
+        session[:user_id].should == user.id
       end
 
-      context 'when session has a return to address' do
-        let(:url) { random_url }
-        before { session[:return_to] = url }
+      it 'should set the current_user.' do
+        controller.current_user.should be_nil
+        post :login, email: email, password: password
+        controller.current_user.should == user
+      end
 
-        it 'redirects to the specified address.' do
-          post :login, email: email, password: password
-          response.should redirect_to url
+      context 'controller has an on_login callback' do
+        before do
+          class UsersController
+            def on_login
+              head :ok
+            end
+          end
         end
 
-        it 'deletes the return to address.' do
-          session[:return_to].should == url
+        after do
+          class UsersController
+            remove_method :on_login
+          end
+        end
+
+        it 'should invoke the callback.' do
+          controller.should_receive(:on_login).and_call_original
           post :login, email: email, password: password
-          session[:return_to].should be_nil
+        end
+
+        it 'should not redirect.' do
+          post :login, email: email, password: password
+          response.should_not be_redirect
         end
       end
 
-      context 'when session does not have a return to address' do
-        it 'redirects to the root page.' do
+      context 'controller does not have an on_login callback' do
+        it 'should not invoke the callback.' do
+          controller.should_not respond_to :on_login
+          # Not using should_not_receive, since it defines the :on_login on the subject, defeating the purpose of test.
           post :login, email: email, password: password
-          response.should redirect_to root_path
+        end
+
+        it 'should redirect to the referer.' do
+          post :login, email: email, password: password
+          response.should redirect_to referer
         end
       end
     end
   end
 
   describe '#logout' do
-    it 'redirects to the root page.' do
-      get :logout
-      response.should redirect_to root_path
+    let!(:user) { create :user }
+    before do
+      session[:user_id] = user.id
+      controller.set_current_user
     end
 
-    it 'removes the user in the session if it is set.' do
-      session[:user_id] = create(:user).id
-
-      session[:user_id].should be_present
+    it 'should remove the user_id from session.' do
+      session[:user_id].should == user.id
       get :logout
       session[:user_id].should be_nil
     end
 
-    it 'keeps the session unchanged if there was no user.' do
-      session[:user_id].should be_nil
+    it 'should unset current_user.' do
+      controller.current_user.should == user
       get :logout
-      session[:user_id].should be_nil
+      controller.current_user.should be_nil
     end
 
-    it 'removes the return_to in the session if it is set.' do
-      session[:return_to] = random_url
+    context 'controller has a logout callback' do
+      before do
+        class UsersController
+          def on_logout
+            head :ok
+          end
+        end
+      end
 
-      session[:return_to].should be_present
-      get :logout
-      session[:return_to].should be_nil
+      after do
+        class UsersController
+          remove_method :on_logout
+        end
+      end
+
+      it 'should invoke the callback.' do
+        controller.should_receive(:on_logout).and_call_original
+        get :logout
+      end
+
+      it 'should not redirect.' do
+        get :logout
+        response.should_not be_redirect
+      end
     end
 
-    it 'keeps the session unchanged if there was no return_to.' do
-      session[:return_to].should be_nil
-      get :logout
-      session[:return_to].should be_nil
+    context 'controller does not have a logout callback' do
+      it 'should not invoke the callback.' do
+        controller.should_not respond_to :on_logout
+        # Not using should_not_receive, since it defines the :on_logout on the subject, defeating the purpose of test.
+        get :logout
+      end
+
+      it 'should redirect to the referer.' do
+        get :logout
+        response.should redirect_to referer
+      end
     end
   end
 
@@ -111,17 +160,42 @@ describe UsersController do
         User.should exist email: email
       end
 
-      it 'should set HTTP status to success.' do
-        post :signup, email: email, password: password
-        response.should be_success
+      context 'controller has an on_signup callback' do
+        before do
+          class UsersController
+            def on_signup
+              head :ok
+            end
+          end
+        end
+
+        after do
+          class UsersController
+            remove_method :on_signup
+          end
+        end
+
+        it 'should invoke the callback.' do
+          controller.should_receive(:on_signup).and_call_original
+          post :signup, email: email, password: password
+        end
+
+        it 'should not redirect.' do
+          post :signup, email: email, password: password
+          response.should_not be_redirect
+        end
       end
 
-      it 'should return JSON describing the user.' do
-        post :signup, email: email, password: password
-        JSON.parse(response.body).tap do |object|
-          object.should be_a Hash
-          object.keys.should =~ ['email']
-          object['email'].should == email
+      context 'controller does not have an on_signup callback' do
+        it 'should not invoke the callback.' do
+          controller.should_not respond_to :on_signup
+          # Not using should_not_receive, since it defines the :on_signup on the subject, defeating the purpose of test.
+          post :signup, email: email, password: password
+        end
+
+        it 'should redirect to the referer.' do
+          post :signup, email: email, password: password
+          response.should redirect_to referer
         end
       end
     end
@@ -137,18 +211,14 @@ describe UsersController do
         expect { post :signup, email: email, password: password }.to_not change { User.count }
       end
 
-      it 'should set HTTP status to bad request.' do
+      it 'redirects to referring page.' do
         post :signup, email: email, password: password
-        response.should be_bad_request
+        response.should redirect_to referer
       end
 
-      it 'should return JSON describing the error.' do
+      it 'sets an error message.' do
         post :signup, email: email, password: password
-        JSON.parse(response.body).tap do |object|
-          object.should be_a Hash
-          object.keys.should =~ ['errors']
-          object['errors'].should == errors
-        end
+        flash.alert.should == 'Please check email and password.'
       end
     end
   end

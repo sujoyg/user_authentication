@@ -1,19 +1,32 @@
+controller = File.join Rails.root, 'app/controllers/users_controller.rb'
+require controller if File.exists? controller
+
 class UsersController < ApplicationController
   def login
     user = User.find_by_email params[:email]
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect_to session.delete(:return_to) || root_path
+      set_current_user
+
+      if respond_to? :on_login
+        on_login
+      else
+        redirect_to :back
+      end
     else
-      redirect_to root_path, alert: "Please check email and password."
+      redirect_to :back, alert: 'Please check email and password.'
     end
   end
 
   def logout
-    session.delete :return_to
     session.delete :user_id
+    set_current_user
 
-    redirect_to root_path
+    if respond_to? :on_logout
+      on_logout
+    else
+      redirect_to :back
+    end
   end
 
   def signup
@@ -22,9 +35,16 @@ class UsersController < ApplicationController
     user.password = params[:password]
 
     if user.save
-      render json: {email: user.email}, status: :ok
+      session[:user_id] = user.id
+      set_current_user
+
+      if respond_to? :on_signup
+        on_signup
+      else
+        redirect_to :back
+      end
     else
-      render json: {errors: user.errors}, status: :bad_request
+      redirect_to :back, alert: 'Please check email and password.'
     end
   end
 end

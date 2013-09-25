@@ -11,7 +11,7 @@ describe User do
 
   describe 'callbacks' do
     let(:password) { random_text(:length => 32) }
-    before { Random.stub!(:password) { password } }
+    before { Random.stub(:password) { password } }
 
     it 'should set the password to something random if it is not set.' do
       subject.password.should be_nil

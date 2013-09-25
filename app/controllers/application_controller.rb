@@ -19,7 +19,12 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    if session[:user_id].nil?
+      @current_user = nil
+    elsif @current_user.nil? || @current_user.id != session[:user_id]
+      @current_user = User.find session[:user_id]
+    end
+
     true
   end
 end
