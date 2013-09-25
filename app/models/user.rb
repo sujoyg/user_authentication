@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   before_validation { |user| user.password = Random.password if user.password.nil? }
-  validates_presence_of :email
+  validates :email, presence: true, uniqueness: true, email: true
 end
 
 app_model = File.join Rails.root, 'app/models/user.rb'
