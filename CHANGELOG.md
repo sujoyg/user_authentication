@@ -1,3 +1,9 @@
+# 0.1.0
+  * Feature: Support for signups and custom actions on login, logout and signup.
+
+# 0.0.9
+  * Bug: Remove dependency on rspec and lower bcrypt version requirement.
+
 # 0.0.8
   * Bug: current_user was not available in helpers and views.
 

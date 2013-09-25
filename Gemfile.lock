@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    user_authentication (0.0.9)
+    user_authentication (0.1.0)
       bcrypt-ruby (~> 3.0.0)
       rails (~> 3.2.12)
 
