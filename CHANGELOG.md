@@ -1,3 +1,6 @@
+# 0.1.1
+  * Bug: If app adds a blanket authorize before filter, user signups will fail. Always disable authorize for signups.
+
 # 0.1.0
   * Feature: Support for signups and custom actions on login, logout and signup.
 
