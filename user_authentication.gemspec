@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/sujoyg/user_authentication"
   s.summary     = "A rails engine for email and password based user authentication."
   s.description = "A rails engine for email and password based user authentication."
-
+  s.license     = 'MIT'
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile"]
 
   s.add_dependency "rails", "~> 3.2.12"
