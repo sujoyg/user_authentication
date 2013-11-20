@@ -1,3 +1,6 @@
+# 0.1.2
+  * Feature: Support for setting passwords.
+
 # 0.1.1
   * Bug: If app adds a blanket authorize before filter, user signups will fail. Always disable authorize for signups.
 

@@ -1,7 +1,6 @@
-controller = File.join Rails.root, 'app/controllers/users_controller.rb'
-require controller if File.exists? controller
-
 class UsersController < ApplicationController
+  before_filter :authorize, only: [:set_password]
+
   def login
     user = User.find_by_email params[:email]
     if user && user.authenticate(params[:password])
@@ -47,4 +46,18 @@ class UsersController < ApplicationController
       redirect_to :back, alert: 'Please check email and password.'
     end
   end
+
+  def set_password
+    current_user.password = params[:password]
+    current_user.save
+
+    if respond_to? :on_set_password
+      on_set_password
+    else
+      redirect_to :back
+    end
+  end
 end
+
+controller = File.join Rails.root, 'app/controllers/users_controller.rb'
+require controller if File.exists? controller

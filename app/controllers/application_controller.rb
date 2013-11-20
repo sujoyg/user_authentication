@@ -4,8 +4,8 @@ class ApplicationController < ActionController::Base
  # private
 
   def authorize
-    # Not using skip before_filter, since main app could inadvertantly override that.
-    # For example, it could have required the filter in its application_controller.
+    # Not using skip_before_filter, since main app could inadvertently override that, for example,
+    # by using a before_filter in its application_controller.
     if params[:controller] == 'users' && ['login', 'logout', 'signup'].include?(params[:action])
       return true
     end
