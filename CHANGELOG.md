@@ -1,3 +1,7 @@
+# 0.1.3
+  * Feature: Ready made login and signup forms.
+  * Other: Improved documentation.
+
 # 0.1.2
   * Feature: Support for setting passwords.
 
