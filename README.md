@@ -36,18 +36,20 @@ There are three ways of creating a login form:
 On a successful login:
 
 1. `current_user` will be set to the logged in user.
-2. If a `UsersController` with `on_login` action is defined, that will be invoked.
+2. If an `on_login` action on `UsersController` is defined, that will be invoked.
 3. If it is not defined:
-	1. If a `next` field is set in the form, site will be redirected to its value.
-	2. If a `next` field is not set, site will be redirected back to the referrer.
+	1. If a `redirect` field is set in the form, site will be redirected to its value.
+	2. If a `redirect` field is not set, site will be redirected back to the referrer.
 
 On a failed login:
 
 1. `current_user` will be nil.
 2. Site will be redirected back to the referrer.
 
-A user should be assumed to be logged in if `current_user` is set.
-You can render a logged in experience based on whether `current_user` was set.
+Notes:
+
+* You can render a logged in experience based on whether `current_user` was set.
+* If you want to set the redirect URL, you can render the partial directly as `render "shared/login", redirect: <custom_url>` or define an `on_login` action in your `UsersController` that performs the redirect.
 
 ### Creating a signup form:
 There are three ways of creating a signup form:
@@ -59,12 +61,17 @@ There are three ways of creating a signup form:
 On a successful signup:
 
 1. A user will be created in the database, logged in, and `current_user` set to this signed up and logged in user.
-2. If a `UsersController` with `on_signup` action is defined, that will be invoked.
+2. If an `on_signup` action on `UsersController` is defined, that will be invoked.
 3. If it is not defined:
-	1. If a `next` field is set in the form, site will be redirected to its value.
-	2. If a `next` field is not set, site will be redirected back to the referrer.
+	1. If a `redirect` field is set in the form, site will be redirected to its value.
+	2. If a `redirect` field is not set, site will be redirected back to the referrer.
 
 On a failed signup:
 
 1. `current_user` will be nil.
 2. Site will be redirected back to the referrer.
+
+Notes:
+
+* You can render a logged in experience based on whether `current_user` was set.
+* If you want to set the redirect URL, you can render the partial directly as `render "shared/signup", redirect: <custom_url>` or define an `on_signup` action in your `UsersController` that performs the redirect.
