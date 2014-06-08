@@ -2,6 +2,12 @@ class UsersController < ApplicationController
   before_filter :authorize, only: [:set_password]
 
   def login
+  end
+
+  def signup
+  end
+
+  def do_login
     user = User.find_by_email params[:email]
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
@@ -10,25 +16,25 @@ class UsersController < ApplicationController
       if respond_to? :on_login
         on_login
       else
-        redirect_to :back
+        redirect_to params[:next] || :back
       end
     else
       redirect_to :back, alert: 'Please check email and password.'
     end
   end
 
-  def logout
+  def do_logout
     session.delete :user_id
     set_current_user
 
     if respond_to? :on_logout
       on_logout
     else
-      redirect_to :back
+      redirect_to root_path
     end
   end
 
-  def signup
+  def do_signup
     user = User.new
     user.email = params[:email]
     user.password = params[:password]
@@ -40,7 +46,7 @@ class UsersController < ApplicationController
       if respond_to? :on_signup
         on_signup
       else
-        redirect_to :back
+        redirect_to params[:next] || :back
       end
     else
       redirect_to :back, alert: 'Please check email and password.'
@@ -54,7 +60,7 @@ class UsersController < ApplicationController
     if respond_to? :on_set_password
       on_set_password
     else
-      redirect_to :back
+      redirect_to params[:next] || :back
     end
   end
 end

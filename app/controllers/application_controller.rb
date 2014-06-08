@@ -4,9 +4,9 @@ class ApplicationController < ActionController::Base
  # private
 
   def authorize
-    # Not using skip_before_filter, since main app could inadvertently override that, for example,
-    # by using a before_filter in its application_controller.
-    if params[:controller] == 'users' && ['login', 'logout', 'signup'].include?(params[:action])
+    # Not using skip_before_filter, since main app could inadvertently override that
+    # by using a before_filter :authorize in its application_controller.
+    if params[:controller] == "users" && ["login", "logout", "signup"].include?(params[:action])
       return true
     end
 
@@ -31,4 +31,4 @@ class ApplicationController < ActionController::Base
   end
 end
 
-require File.join Rails.root, 'app/controllers/application_controller'
+require File.join Rails.root, "app/controllers/application_controller"
