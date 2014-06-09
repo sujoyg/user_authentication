@@ -1,3 +1,7 @@
+# 0.1.4
+  * Feature: If a page requires authorization, redirect back to it after login. 
+  * Feature: Allow setting login page to redirect to for authorization.
+
 # 0.1.3
   * Feature: Ready made login and signup forms.
   * Other: Improved documentation.
