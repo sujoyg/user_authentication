@@ -16,10 +16,10 @@ class UsersController < ApplicationController
       if respond_to? :on_login
         on_login
       else
-        redirect_to params[:redirect] || :back
+        redirect
       end
     else
-      redirect_to :back, alert: 'Please check email and password.'
+      redirect_to :back, alert: "Please check email and password."
     end
   end
 
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
     if respond_to? :on_logout
       on_logout
     else
-      redirect_to root_path
+      redirect_to :back
     end
   end
 
@@ -46,10 +46,10 @@ class UsersController < ApplicationController
       if respond_to? :on_signup
         on_signup
       else
-        redirect_to params[:redirect] || :back
+        redirect
       end
     else
-      redirect_to :back, alert: 'Please check email and password.'
+      redirect_to :back, alert: "Please check email and password."
     end
   end
 
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
     if respond_to? :on_set_password
       on_set_password
     else
-      redirect_to params[:redirect] || :back
+      redirect
     end
   end
 end

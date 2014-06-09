@@ -1,9 +1,10 @@
 class ApplicationController < ActionController::Base
   before_filter :set_current_user
 
- # private
+  # private
 
-  def authorize
+  # redirect: Path to login page.
+  def authorize(redirect=nil)
     # Not using skip_before_filter, since main app could inadvertently override that
     # by using a before_filter :authorize in its application_controller.
     if params[:controller] == "users" && ["login", "logout", "signup"].include?(params[:action])
@@ -11,8 +12,10 @@ class ApplicationController < ActionController::Base
     end
 
     if current_user.nil?
-      session[:return_to] = url_for params
-      redirect_to root_path, alert: "Please log in to access this page."
+      session[:redirect] = url_for params
+      redirect_to redirect || login_path, alert: "Please log in to access this page."
+    else
+      return true
     end
   end
 
@@ -28,6 +31,11 @@ class ApplicationController < ActionController::Base
     end
 
     true
+  end
+
+  def redirect
+    session_redirect = session.delete(:redirect)
+    redirect_to params[:redirect] || session_redirect || :back
   end
 end
 
