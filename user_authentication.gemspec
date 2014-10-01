@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile"]
 
-  s.add_dependency "rails", "~> 3.2.12"
-  s.add_dependency "bcrypt-ruby", "~> 3.0.0"
+  s.add_dependency "rails", "~> 4.1.0"
+  s.add_dependency "bcrypt-ruby", "3.1.0"
   s.add_dependency "ruby-openid", "~> 2.3.0"
 
   s.add_development_dependency "sqlite3"

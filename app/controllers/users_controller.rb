@@ -38,6 +38,9 @@ class UsersController < ApplicationController
     user = User.new
     user.email = params[:email]
     user.password = params[:password]
+    (user.attributes.keys - ['email', 'password_digest']).each do |attr|
+      user.send "#{attr}=", params[attr.to_sym]
+    end
 
     if user.save
       session[:user_id] = user.id

@@ -5,7 +5,7 @@ require 'mail'
 class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     email = Mail::Address.new(value)
-    valid = email.domain && email.address == value && email.__send__(:tree).domain.dot_atom_text.elements.size > 1 rescue false
+    valid = email.domain && email.address == value && email.domain.split('.').size > 1 rescue false
     record.errors[attribute] << (options[:message] || 'is malformed') unless valid
   end
 end

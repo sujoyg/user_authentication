@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   def authorize(redirect=nil)
     # Not using skip_before_filter, since main app could inadvertently override that
     # by using a before_filter :authorize in its application_controller.
-    if params[:controller] == "users" && ["login", "logout", "signup"].include?(params[:action])
+    if params[:controller] == "users" && ["do_login", "login", "logout", "do_signup", "signup"].include?(params[:action])
       return true
     end
 
