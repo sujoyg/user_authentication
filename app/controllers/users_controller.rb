@@ -19,7 +19,7 @@ class UsersController < ApplicationController
         redirect
       end
     else
-      redirect_to :back, alert: "Please check email and password."
+      redirect_to :back, alert: 'Please check email and password.'
     end
   end
 
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
     if respond_to? :on_logout
       on_logout
     else
-      redirect_to :back
+      redirect_to params[:redirect] || root_path
     end
   end
 

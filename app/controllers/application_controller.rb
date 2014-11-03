@@ -7,13 +7,13 @@ class ApplicationController < ActionController::Base
   def authorize(redirect=nil)
     # Not using skip_before_filter, since main app could inadvertently override that
     # by using a before_filter :authorize in its application_controller.
-    if params[:controller] == "users" && ["do_login", "login", "logout", "do_signup", "signup"].include?(params[:action])
+    if params[:controller] == 'users' && ['do_login', 'login', 'logout', 'do_signup', 'signup'].include?(params[:action])
       return true
     end
 
     if current_user.nil?
       session[:redirect] = url_for params
-      redirect_to redirect || login_path, alert: "Please log in to access this page."
+      redirect_to redirect || login_path, alert: 'Please log in to access this page.'
     else
       return true
     end
@@ -35,8 +35,8 @@ class ApplicationController < ActionController::Base
 
   def redirect
     session_redirect = session.delete(:redirect)
-    redirect_to params[:redirect] || session_redirect || :back
+    redirect_to params[:redirect] || session_redirect || root_path
   end
 end
 
-require File.join Rails.root, "app/controllers/application_controller"
+require File.join Rails.root, 'app/controllers/application_controller'
