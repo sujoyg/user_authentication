@@ -1,3 +1,6 @@
+# 0.2.3
+  * Feature: Displaying an error on authentication failure.
+
 # 0.2.1
   * Other: Remove depedency on ruby-openid.
 
@@ -5,7 +8,7 @@
   * Other: Upgrade to Rails 4.
 
 # 0.1.4
-  * Feature: If a page requires authorization, redirect back to it after login. 
+  * Feature: If a page requires authorization, redirect back to it after login.
   * Feature: Allow setting login page to redirect to for authorization.
 
 # 0.1.3
