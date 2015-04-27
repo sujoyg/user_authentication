@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_filter :set_current_user
+  before_filter :set_current_account
 
   # private
 
@@ -7,11 +7,11 @@ class ApplicationController < ActionController::Base
   def authorize(redirect=nil)
     # Not using skip_before_filter, since main app could inadvertently override that
     # by using a before_filter :authorize in its application_controller.
-    if params[:controller] == 'users' && ['do_login', 'login', 'logout', 'do_signup', 'signup'].include?(params[:action])
+    if params[:controller] == 'accounts' && ['do_login', 'login', 'do_logout', 'do_signup', 'signup'].include?(params[:action])
       return true
     end
 
-    if current_user.nil?
+    if current_account.nil?
       session[:redirect] = url_for params
       redirect_to redirect || login_path, alert: 'Please log in to access this page.'
     else
@@ -19,15 +19,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def current_user
-    @current_user
+  def current_account
+    @current_account
   end
 
-  def set_current_user
-    if session[:user_id].nil?
-      @current_user = nil
-    elsif @current_user.nil? || @current_user.id != session[:user_id]
-      @current_user = User.find session[:user_id]
+  def set_current_account
+    if session[:account_id].nil?
+      @current_account = nil
+    elsif @current_account.nil? || @current_account.id != session[:account_id]
+      @current_account = Account.find session[:account_id]
     end
 
     true

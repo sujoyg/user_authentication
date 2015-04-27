@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  factory :user do |user|
-    user.email { random_email }
-    user.password { random_text }
+  factory :account do |account|
+    account.email { random_email }
+    account.password { random_text }
   end
 end

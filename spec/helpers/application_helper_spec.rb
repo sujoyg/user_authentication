@@ -1,13 +1,13 @@
 require 'spec_helper'
 require 'application_helper'
 
-describe ApplicationHelper do
-  describe '#current_user' do
-    it 'should return @current_user' do
-      user = create :user
-      helper.instance_variable_set '@current_user', user
+describe ApplicationHelper, :type => :helper do
+  describe '#current_account' do
+    it 'should return @current_account' do
+      account = create :account
+      helper.instance_variable_set '@current_account', account
 
-      helper.current_user.should == user
+      expect(helper.current_account).to eq account
     end
   end
 end

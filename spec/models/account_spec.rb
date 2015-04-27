@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe User do
+describe Account, :type => :model do
   describe 'attributes' do
     it { should have_attribute(:email) }
     it { should have_attribute(:password_digest) }
@@ -11,18 +11,18 @@ describe User do
 
   describe 'callbacks' do
     let(:password) { random_text(:length => 32) }
-    before { Random.stub(:password) { password } }
+    before { allow(Random).to receive(:password).and_return(password) }
 
     it 'should set the password to something random if it is not set.' do
-      subject.password.should be_nil
+      expect(subject.password).to be_nil
       subject.run_callbacks :validation
-      subject.password.should == password
+      expect(subject.password).to eq password
     end
 
     it 'should retain the password if it was already set.' do
       subject.password = password
       subject.run_callbacks :validation
-      subject.password.should == password
+      expect(subject.password).to eq password
     end
   end
 

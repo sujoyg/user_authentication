@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class AccountsController < ApplicationController
   before_filter :authorize, only: [:set_password]
 
   def login
@@ -8,10 +8,10 @@ class UsersController < ApplicationController
   end
 
   def do_login
-    user = User.find_by_email params[:email]
-    if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      set_current_user
+    account = Account.find_by_email params[:email]
+    if account && account.authenticate(params[:password])
+      session[:account_id] = account.id
+      set_current_account
 
       if respond_to? :on_login
         on_login
@@ -24,8 +24,8 @@ class UsersController < ApplicationController
   end
 
   def do_logout
-    session.delete :user_id
-    set_current_user
+    session.delete :account_id
+    set_current_account
 
     if respond_to? :on_logout
       on_logout
@@ -35,16 +35,16 @@ class UsersController < ApplicationController
   end
 
   def do_signup
-    user = User.new
-    user.email = params[:email]
-    user.password = params[:password]
-    (user.attributes.keys - ['email', 'password_digest']).each do |attr|
-      user.send "#{attr}=", params[attr.to_sym]
+    account = Account.new
+    account.email = params[:email]
+    account.password = params[:password]
+    (account.attributes.keys - ['email', 'password_digest']).each do |attr|
+      account.send "#{attr}=", params[attr.to_sym]
     end
 
-    if user.save
-      session[:user_id] = user.id
-      set_current_user
+    if account.save
+      session[:account_id] = account.id
+      set_current_account
 
       if respond_to? :on_signup
         on_signup
@@ -57,8 +57,8 @@ class UsersController < ApplicationController
   end
 
   def set_password
-    current_user.password = params[:password]
-    current_user.save
+    current_account.password = params[:password]
+    current_account.save
 
     if respond_to? :on_set_password
       on_set_password
@@ -68,5 +68,5 @@ class UsersController < ApplicationController
   end
 end
 
-controller = File.join Rails.root, 'app/controllers/users_controller.rb'
+controller = File.join Rails.root, 'app/controllers/accounts_controller.rb'
 require controller if File.exists? controller
