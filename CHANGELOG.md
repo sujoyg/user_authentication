@@ -1,3 +1,6 @@
+# 1.1.0
+  * Feature (breaking): Do not set password if not already set.
+
 # 1.0.0
   * Feature: Renaming everything to account.
 

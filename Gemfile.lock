@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    user_authentication (1.0.0)
+    user_authentication (1.1.0)
       bcrypt (~> 3.1)
       rails (~> 4.1)
 
@@ -103,9 +103,9 @@ GEM
       rspec-core (~> 3.1)
       rspec-expectations (~> 3.1)
     specstar-support-random (0.1.0)
-    sprockets (3.0.2)
+    sprockets (3.2.0)
       rack (~> 1.0)
-    sprockets-rails (2.2.4)
+    sprockets-rails (2.3.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
@@ -130,3 +130,6 @@ DEPENDENCIES
   specstar-support-random (~> 0.1)
   sqlite3
   user_authentication!
+
+BUNDLED WITH
+   1.10.3

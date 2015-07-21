@@ -13,12 +13,6 @@ describe Account, :type => :model do
     let(:password) { random_text(:length => 32) }
     before { allow(Random).to receive(:password).and_return(password) }
 
-    it 'should set the password to something random if it is not set.' do
-      expect(subject.password).to be_nil
-      subject.run_callbacks :validation
-      expect(subject.password).to eq password
-    end
-
     it 'should retain the password if it was already set.' do
       subject.password = password
       subject.run_callbacks :validation
