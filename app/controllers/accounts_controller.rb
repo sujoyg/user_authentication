@@ -1,11 +1,9 @@
 class AccountsController < ApplicationController
-  before_filter :authorize, only: [:set_password]
+  before_filter :authorize, only: [:do_set_password]
 
   def login
   end
 
-  def signup
-  end
 
   def do_login
     account = Account.find_by_email params[:email]
@@ -23,7 +21,8 @@ class AccountsController < ApplicationController
     end
   end
 
-  def do_logout
+
+  def logout
     session.delete :account_id
     set_current_account
 
@@ -33,6 +32,11 @@ class AccountsController < ApplicationController
       redirect_to params[:redirect] || root_path
     end
   end
+
+
+  def signup
+  end
+
 
   def do_signup
     account = Account.new
@@ -56,7 +60,12 @@ class AccountsController < ApplicationController
     end
   end
 
-  def set_password
+
+  def do_set_password
+    unless params[:password] == params[:password_confirmation]
+      return redirect_to :back, alert: 'Passwords do not match.'
+    end
+
     current_account.password = params[:password]
     current_account.save
 

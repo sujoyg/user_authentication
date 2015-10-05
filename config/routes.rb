@@ -1,11 +1,8 @@
 Rails.application.routes.draw do
-  match "login" => "accounts#login", :via => :get
-  match "login" => "accounts#do_login", :via => :post
-
-  match "logout" => "accounts#do_logout", :via => :get
-
-  match "signup" => "accounts#signup", :via => :get
-  match "signup" => "accounts#do_signup", :via => :post
-
-  match "set_password" => "accounts#set_password", :via => :post
+  get 'login' => 'accounts#login'
+  post 'login' => 'accounts#do_login'
+  get 'logout' => 'accounts#logout'
+  post 'set_password' => 'accounts#do_set_password'
+  get 'signup' => 'accounts#signup'
+  post 'signup' => 'accounts#do_signup'
 end

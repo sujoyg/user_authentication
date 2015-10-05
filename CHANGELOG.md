@@ -1,3 +1,6 @@
+# 1.2.0
+  * Feature (breaking): Requires a password confirmation for setting password.
+
 # 1.1.0
   * Feature (breaking): Do not set password if not already set.
 

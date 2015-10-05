@@ -4,6 +4,8 @@ describe AccountsController, :type => :controller do
   let(:referer) { random_url }
   before { request.env['HTTP_REFERER'] = referer }
 
+  it { expect(controller).to have_before_filter :authorize, only: [:set_password] }
+
   describe 'POST do_login' do
     let(:email) { random_email }
     let(:password) { random_text }
@@ -129,7 +131,7 @@ describe AccountsController, :type => :controller do
     end
   end
 
-  describe 'GET do_logout' do
+  describe 'GET logout' do
     let!(:account) { create :account }
     before do
       session[:account_id] = account.id
@@ -138,13 +140,13 @@ describe AccountsController, :type => :controller do
 
     it 'should remove the account_id from session.' do
       expect(session[:account_id]).to eq account.id
-      get :do_logout
+      get :logout
       expect(session[:account_id]).to be_nil
     end
 
     it 'should unset current_account.' do
       expect(controller.current_account).to eq account
-      get :do_logout
+      get :logout
       expect(controller.current_account).to be_nil
     end
 
@@ -165,11 +167,11 @@ describe AccountsController, :type => :controller do
 
       it 'should invoke the callback.' do
         expect(controller).to receive(:on_logout).and_call_original
-        get :do_logout
+        get :logout
       end
 
       it 'should not redirect.' do
-        get :do_logout
+        get :logout
         expect(response).to_not be_redirect
       end
     end
@@ -178,19 +180,19 @@ describe AccountsController, :type => :controller do
       it 'should not invoke the callback.' do
         expect(controller).to_not respond_to :on_logout
         # Not using should_not_receive, since it defines the :on_logout on the subject, defeating the purpose of test.
-        get :do_logout
+        get :logout
       end
 
       it 'should redirect to the redirect URL in query params' do
         params_redirect_url = random_url
-        get :do_logout, redirect: params_redirect_url
+        get :logout, redirect: params_redirect_url
         expect(response).to redirect_to params_redirect_url
       end
 
       it 'should redirect to the root path otherwise' do
         redirect_url = random_url
         allow(controller).to receive(:root_path).and_return redirect_url
-        get :do_logout
+        get :logout
         expect(response).to redirect_to redirect_url
       end
     end
@@ -303,6 +305,110 @@ describe AccountsController, :type => :controller do
       it 'sets an error message.' do
         post :do_signup, email: email, password: password
         expect(flash.alert).to eq 'Please check email and password.'
+      end
+    end
+  end
+
+  describe 'POST do_set_password' do
+    let!(:old_password) { random_text }
+    let!(:new_password) { random_text }
+    let!(:account) { FactoryGirl.create :account, password: old_password }
+
+    before { session[:account_id] = account.id }
+
+    context 'passwords do not match' do
+      it 'redirects to back' do
+        post :do_set_password, password: random_text, password_confirmation: random_text
+
+        expect(response).to redirect_to referer
+      end
+
+      it 'sets a message' do
+        post :do_set_password, password: random_text, password_confirmation: random_text
+
+        expect(flash[:alert]).to eq 'Passwords do not match.'
+      end
+
+      it 'does not change the password' do
+        post :do_set_password, password: random_text, password_confirmation: random_text
+
+        account.reload
+        expect(account.authenticate old_password).to eq account
+        expect(account.authenticate new_password).to eq false
+      end
+
+      it 'does not call on_set_password even if defined' do
+        class AccountsController
+          def on_set_password
+          end
+        end
+
+        assert controller.respond_to?('on_set_password')
+
+        expect(controller).to_not receive :on_set_password
+
+        post :do_set_password, password: random_text, password_confirmation: random_text
+
+        class AccountsController
+          remove_method :on_set_password
+        end
+      end
+    end
+
+    context 'passwords match' do
+      let!(:new_password) { random_text }
+
+      it 'changes the account password' do
+        post :do_set_password, password: new_password, password_confirmation: new_password, redirect: referer
+
+        account.reload
+        expect(account.authenticate old_password).to eq false
+        expect(account.authenticate new_password).to eq account
+      end
+
+      it 'calls on_set_password when defined' do
+        class AccountsController
+          def on_set_password
+            redirect_to :back
+          end
+        end
+
+        expect(controller).to receive(:on_set_password).and_call_original
+
+        post :do_set_password, password: new_password, password_confirmation: new_password
+
+        class AccountsController
+          remove_method :on_set_password
+        end
+      end
+
+      context 'when on_set_password is not defined' do
+        before { assert !controller.respond_to?(:on_set_password) }
+
+        it 'redirects to the URL specified in redirect query parameter' do
+          redirect_url = random_url
+          session[:redirect] = random_url
+
+          post :do_set_password, password: new_password, password_confirmation: new_password, redirect: redirect_url
+
+          expect(response).to redirect_to redirect_url
+        end
+
+        it 'redirects to the redirect URL in session if query parameter is not set' do
+          redirect_url = session[:redirect] = random_url
+
+          post :do_set_password, password: new_password, password_confirmation: new_password
+
+          expect(response).to redirect_to redirect_url
+        end
+
+        it 'redirects to root path if neither is set' do
+          assert session[:redirect].nil?
+
+          post :do_set_password, password: new_password, password_confirmation: new_password
+
+          expect(response).to redirect_to root_path
+        end
       end
     end
   end
