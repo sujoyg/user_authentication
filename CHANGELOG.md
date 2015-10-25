@@ -1,3 +1,6 @@
+# 1.2.1
+  * Feature: Consumer can implement accounts/signup and accounts/login to override default views.
+
 # 1.2.0
   * Feature (breaking): Requires a password confirmation for setting password.
 

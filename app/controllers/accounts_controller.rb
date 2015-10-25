@@ -2,6 +2,12 @@ class AccountsController < ApplicationController
   before_filter :authorize, only: [:do_set_password]
 
   def login
+    template = File.join Rails.root, 'app/views/accounts/login'
+    if File.exists? template
+      render template
+    else
+      render 'accounts/default_login'
+    end
   end
 
 
@@ -35,6 +41,12 @@ class AccountsController < ApplicationController
 
 
   def signup
+    template = File.join Rails.root, 'app/views/accounts/signup'
+    if File.exists? template
+      render template
+    else
+      render 'accounts/default_signup'
+    end
   end
 
 

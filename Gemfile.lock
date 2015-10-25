@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    user_authentication (1.2.0)
+    user_authentication (1.2.1)
       bcrypt (~> 3.1)
       rails (~> 4.1)
 

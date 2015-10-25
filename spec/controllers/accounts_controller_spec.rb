@@ -131,6 +131,21 @@ describe AccountsController, :type => :controller do
     end
   end
 
+  describe 'GET login' do
+    it 'is successful' do
+      get :login
+
+      expect(response).to have_http_status :success
+    end
+
+    it 'renders the default template' do
+      get :login
+
+      expect(response).to render_template 'accounts/default_login'
+    end
+
+  end
+
   describe 'GET logout' do
     let!(:account) { create :account }
     before do
@@ -306,6 +321,20 @@ describe AccountsController, :type => :controller do
         post :do_signup, email: email, password: password
         expect(flash.alert).to eq 'Please check email and password.'
       end
+    end
+  end
+
+  describe 'GET signup' do
+    it 'is successful' do
+      get :signup
+
+      expect(response).to have_http_status :success
+    end
+
+    it 'renders the default template' do
+      get :signup
+
+      expect(response).to render_template 'accounts/default_signup'
     end
   end
 
