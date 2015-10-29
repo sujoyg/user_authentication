@@ -1,3 +1,6 @@
+# 1.2.2
+  * Bug: Consumer can implement accounts/signup and accounts/login to override default view for real.
+
 # 1.2.1
   * Feature: Consumer can implement accounts/signup and accounts/login to override default views.
 
