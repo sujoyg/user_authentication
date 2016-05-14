@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    user_authentication (1.2.1)
+    user_authentication (2.0.0)
       bcrypt (~> 3.1)
       rails (~> 4.1)
 
@@ -132,4 +132,4 @@ DEPENDENCIES
   user_authentication!
 
 BUNDLED WITH
-   1.10.3
+   1.10.6

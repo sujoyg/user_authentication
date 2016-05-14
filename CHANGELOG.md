@@ -1,3 +1,6 @@
+# 2.0.0
+  * Breaking Change: Routes need to be explicitly added by adding `UserAuthentication::Engine.routes` to `routes.rb`.
+
 # 1.2.2
   * Bug: Consumer can implement accounts/signup and accounts/login to override default view for real.
 

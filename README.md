@@ -1,30 +1,32 @@
 User authentication engine requires Rails 3.2.1 or above.
 
-### Installing the engine:
+### Configuring the application:
 
-* Add the following to the `Gemfile`<br>
+* Add the following to the **`Gemfile`**<br>
   `gem 'user_authentication'`
-* Run `bundle install`
+
+* Add the following to **`config/application.rb`**:<br>
+  `config.railties_order = [UserAuthentication::Engine, :main_app, :all]`<br>
+  as the first line after<br>
+  `class Application < Rails::Application`
+
+* Add the following to **`config/routes.rb`**:<br>
+  `UserAuthentication::Engine.routes`<br>
+  as the first line after<br>
+  `YourApplication::Application.routes.draw do`
 
 ### Creating the Account model:
 
-If the model does not exist, run the following:
+If the model does not exist, which is the most common case, run the following:
 
 * `bundle exec rake user_authentication:install:migrations`
 * `bundle exec rake db:migrate`
 
-Else if the model exists:
+Else in the unlikely case that your application already has the model:
 
 * Ensure that the account model has an `email` (`VARCHAR(255)`) and a `password_digest` (`VARCHAR(255)`) field.
 * Add the following line at the top of app/models/account.rb:
   `require File.join UserAuthentication::Engine.config.root, 'app/models/account.rb'`
-
-### Configuring the application:
-
-Add the following to `config/application.rb`:<br>
-`config.railties_order = [UserAuthentication::Engine, :main_app, :all]`<br>
-as the first line after<br>
-`class Application < Rails::Application`
 
 ### Creating a login form:
 There are three ways of creating a login form:
